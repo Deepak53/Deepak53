@@ -4,10 +4,8 @@ const schema = mongoose.Schema;
 
 const user = new schema({
     name : {type:String},   
-    email   : {type:String,required:true,unique:true},
+    email   : {type:String,required:true},
     password : {type:String,required:true},
 })
 
-const employees = mongoose.model('user',user);
-
-module.exports = employees;
+module.exports = mongoose.model('user',user);

@@ -7,7 +7,8 @@ const author = require('../model/author');
 
 const signup = async(req,res)=>{
 
-    let user = await userModel.findOne({email:req.body.email})
+  try {
+    let user = await userModel.findOne({email : req.body.email})
     if(user){
         res.json({message:"user already exist"});
     }
@@ -25,6 +26,9 @@ const signup = async(req,res)=>{
         firstName : result.firstName,
         code:200
     })
+  } catch (error) {
+    console.log(error.message);
+  }
 }
 
 

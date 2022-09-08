@@ -5,7 +5,7 @@ const bodyparser = require('body-parser');
 const {signup} = require("../controller/signup");
 const {signin, createBook, getBookWithCreator} = require("../controller/signin");
 const {verifyToken} =  require("../auth/auth");
-const {userProfile} = require("../controller/signin");
+const {getallbooks} = require("../controller/signin");
 const {writer} = require('../controller/signup');
 const {deletebook} = require('../controller/signin');
 
@@ -15,10 +15,10 @@ app.use(bodyparser.urlencoded({extended:false}))  ;
 app.post("/api/getbooks",getBookWithCreator);
 app.post('/api/signup',signup);
 app.post('/api/signin',signin);
-// app.post("/api/userprofile",verifyToken , userProfile);
+app.get("/api/getallbooks",verifyToken , getallbooks);
 app.post("/api/createbook",verifyToken , createBook);
 app.post('/api/author', verifyToken , writer);
-app.delete('/api/delete' , deletebook );
+app.post('/api/delete' , deletebook );
  app.listen(config.port,console.log(`server is run on ${config.port}`))
 }
 

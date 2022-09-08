@@ -8,8 +8,6 @@ const signin = async(req,res)=>{
     let users = await user.findOne({email:req.body.email}, { email: 1, password: 1 });
     if(!users)
         return  res.json({message:"not valid user"});
-   
-    console.log(req.body.password);
     
     let bcrypts = await bcrypt.compare(req.body.password,users.password);
     
@@ -29,36 +27,6 @@ const signin = async(req,res)=>{
 }
  
 
-// // const userProfile = async (req, res) => {
-    
-// //         await Post.find()
-// //         .populate({ path: "userId" }).exec((err, posts) => {
-// //             console.log("Populated User " + posts);
-// //             return res.json(posts);
-// //         })
-// //  }
-
-
-// const userProfile = async (req, res) => {
-//     // console.log('User Id =========> ', req.data)
- 
-//     await Task.findOne({empid: req.body._id}).populate({path:"employeeId"}).exec((err,post)=>{
-//        if(err){
-//         console.log("errror of popuate",err)
-//        } console.log("post==>",post);
-//         return res.json({post});
-//     })
-//     // console.log('RESULT =========>> ', result)
- 
-//     // if(!result) return res.json({ message: "User not found" })
-    
-//     // return res.json({
-//     //    status : 200,
-//     //    message: "User data found successfully",
-//     //    data : result
-//     // })
-//  }
-
 const createBook = async(req,res)=>{
     try{
     let data = await Books.create(req.body);
@@ -70,12 +38,24 @@ const createBook = async(req,res)=>{
     }
 }
 
-const deletebook =(req,res)=>{
-    let del = Books.findByIdAndDelete({_id : req.body._id});
+const deletebook = (req,res)=>{
+  try{  let del = Books.deleteOne({_id : req.body.id});
     if(!del) return res.json({msg : "no book present"});
-    return res.json({msg : "book del"});
+    return res.json({msg : "book del"})}
+    catch(err){
+        console.log(err.message);
+    };
 }
 
+const getallbooks =( req,res)=>{
+try {
+    let book = Books.find().populate('author');
+    if(!book) return res.json({msg : " no book present"});
+    return res.json({data : book});
+} catch (error) {
+    res.send(error.message);
+}
+}
 
  
 const getBookWithCreator = async(req,res)=>{
@@ -94,7 +74,7 @@ const getBookWithCreator = async(req,res)=>{
 
 module.exports = {
     signin:signin,
-    // userProfile:userProfile,
+    getallbooks: getallbooks,
     createBook:createBook,
     getBookWithCreator:getBookWithCreator,
     deletebook : deletebook

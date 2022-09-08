@@ -1,6 +1,7 @@
-const userModel = require("../model/employee");
+const userModel = require("../model/user");
 const {generateToken} = require('../auth/auth');
 const bcrypt = require("bcrypt");
+const author = require('../model/author');
 
 
 
@@ -17,15 +18,23 @@ const signup = async(req,res)=>{
     req.body.password = hash
 
     let result = await userModel.create(req.body);
-    let token = generateToken(result._id);
+    // let token = generateToken(result._id);
 
     return res.json({
-        token,
         _id : result._id,
         firstName : result.firstName,
         code:200
     })
-
-
 }
-module.exports = signup;
+
+
+const writer = (req,res)=>{
+    let result = author.create(req.body);
+    if(!result) 
+    return res.status(404).json({msg : "no author create"});
+    return res.status(200).json({data : result});
+}
+
+
+
+module.exports = {signup , writer};
